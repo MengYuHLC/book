@@ -5,7 +5,7 @@ struct sockaddr_in getAddr(char *pszIp, uint16_t port) // 输入IP和端口，�
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;              // IPV4地址族
     addr.sin_addr.s_addr = strToInt(pszIp); // IP地址
-    addr.sin_port = htons(port);            // 端口号，要转成大端字节序
+    addr.sin_port = htons(port);            // 端口号，转成大端字节序
     return addr;
 }
 
@@ -15,7 +15,7 @@ char loginUserName[128] = {0}; // 当前登录用户的名字
 void borrow_books();
 void *work(void *p) //线程的任务
 {
-    while (1) // 不停的接受消息
+    while (1) // 接受消息
     {
         MSG msg;
         read(fd, &msg, sizeof(msg)); // 读取服务器发来的消息
@@ -25,7 +25,7 @@ void *work(void *p) //线程的任务
         }
         else if (msg.type == 3) //收到服务器发来的私聊消息
         {
-            SIG_CHAT *sc = (SIG_CHAT *)msg.buf; //收到服务器转发的别的的私聊结构体，里面有别的名字
+            SIG_CHAT *sc = (SIG_CHAT *)msg.buf; //收到服务器转发的别的的私聊结构体
             printf("From %s :%s\n", sc->selfName, sc->text);
         }
     }
@@ -36,10 +36,9 @@ void _register() //注册
     printf("请输入用户名和密码\n");
     REG_NODE rn;
     scanf("%s%s", rn.name, rn.password);
-    MSG msg; // 定义一艘轮船
-    // 把数据放入轮船
-    msg.type = 1;                     // 轮船的运输类型为注册
-    memcpy(msg.buf, &rn, sizeof(rn)); // 把注册结构体拷贝到轮船的仓库中
+    MSG msg; 
+    msg.type = 1;                     // 注册
+    memcpy(msg.buf, &rn, sizeof(rn)); 
     write(fd, &msg, sizeof(msg));
     read(fd, &msg, sizeof(msg));
     printf("%s\n", msg.buf);
@@ -48,13 +47,12 @@ void _register() //注册
 int login() // 登录
 {
     printf("请输入用户名和密码\n");
-    REG_NODE rn; // 这个注册结构体是用来登录的
+    REG_NODE rn; 
     scanf("%s%s", rn.name, rn.password);
-    MSG msg; // 定义一艘轮船
-    // 把数据放入轮船
-    msg.type = 2;                     // 轮船的运输类型为注册
-    memcpy(msg.buf, &rn, sizeof(rn)); // 把注册结构体拷贝到轮船的仓库中
-    write(fd, &msg, sizeof(msg));     // 把登录信息发给服务器
+    MSG msg; 
+    msg.type = 2;                     
+    memcpy(msg.buf, &rn, sizeof(rn)); 
+    write(fd, &msg, sizeof(msg));    
 
     // 接受服务器返回的消息
     read(fd, &msg, sizeof(msg)); // 继续用msg结构体变量来接受返回消息
@@ -74,13 +72,12 @@ int login() // 登录
 int login_Root() //管理员登陆
 {
     printf("请输入用户名和密码\n");
-    REG_NODE rn; // 这个注册结构体是用来登录的
+    REG_NODE rn; 
     scanf("%s%s", rn.name, rn.password);
-    MSG msg; // 定义一艘轮船
-    // 把数据放入轮船
-    msg.type = 8;                     // 轮船的运输类型为注册
-    memcpy(msg.buf, &rn, sizeof(rn)); // 把注册结构体拷贝到轮船的仓库中
-    write(fd, &msg, sizeof(msg));     // 把登录信息发给服务器
+    MSG msg; 
+    msg.type = 8;                    
+    memcpy(msg.buf, &rn, sizeof(rn)); 
+    write(fd, &msg, sizeof(msg));    
 
     // 接受服务器返回的消息
     read(fd, &msg, sizeof(msg)); // 继续用msg结构体变量来接受返回消息
@@ -162,7 +159,7 @@ void singleChat() // 私聊
         }
         MSG msg;
         msg.type = 3;
-        memcpy(msg.buf, &sc, sizeof(SIG_CHAT)); //把私聊的数据拷贝的船舱（消息的Buf）
+        memcpy(msg.buf, &sc, sizeof(SIG_CHAT)); 
         write(fd, &msg, sizeof(MSG));           //把消息发送给服务器
     }
 }
