@@ -33,10 +33,10 @@ typedef struct chat
     char text[512];
 } CHAT;
 
-typedef struct message_node // 想想成一艘大轮船，专门运送数据，且自带数据类型
+typedef struct message_node 
 {
     short type;      // 消息的类型，1.注册 2.加好友 3.私聊 4.群聊 5......
-    char buf[1022]; // 定义一个足够大的仓库，存放各种消息的数据
+    char buf[1022]; // 存放各种消息的数据
     char name[128];
 } MSG;
 
